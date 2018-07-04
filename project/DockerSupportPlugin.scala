@@ -7,7 +7,6 @@
 */
 
 import com.typesafe.sbt.GitVersioning
-import com.typesafe.sbt.SbtGit.git
 import com.typesafe.sbt.packager.docker.DockerPlugin.autoImport._
 import com.typesafe.sbt.packager.universal.UniversalPlugin.autoImport.Universal
 import sbt.Keys._
@@ -20,12 +19,10 @@ object DockerSupportPlugin extends AutoPlugin {
 
   override def requires: sbt.Plugins = JavaAppPackaging && GitVersioning && UniversalDeployPlugin
 
-  val defaultRepository = Some("main-virtual.docker.vidible.aolcloud.net") // TODO: change default repository
-  val organizationName = "main"
+  val organizationName = "onebyaol"
 
   override lazy val projectSettings = Seq(
-    version in Docker := s"${version.value}-${git.gitHeadCommit.value.get.substring(0, 8)}-${git.formattedDateVersion.value}",
-    dockerRepository := defaultRepository,
+    version in Docker := s"${version.value}",
     dockerUpdateLatest := true,
     packageName := s"$organizationName/${packageName.value}",
     mappings in Universal ++= {

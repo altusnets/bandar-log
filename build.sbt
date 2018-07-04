@@ -1,7 +1,7 @@
 import Dependencies._
 import sbt.Keys._
 
-version in ThisBuild := "2.0.0"
+version in ThisBuild := s"2.0.${sys.env.get("TRAVIS_BUILD_NUMBER")}"
 scalaVersion in ThisBuild := "2.11.7"
 
 organization in ThisBuild := "com.aol.one.dwh"
@@ -10,7 +10,7 @@ crossPaths in ThisBuild := false
 updateOptions in ThisBuild := updateOptions.value.withCachedResolution(cachedResoluton = true)
 
 // Projects
-val `aol-dp-bandarlog` = project.in(file("."))
+val `bandar-log` = project.in(file("."))
   .enablePlugins(UniversalDeployPlugin && CodeStylePlugin)
   .settings(
     topLevelDirectory := None,

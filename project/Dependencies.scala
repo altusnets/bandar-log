@@ -12,7 +12,7 @@ object V {
   val spark               = "1.5.2"
   val config              = "1.3.0"
   val datadogMetrics      = "1.1.2"
-  val verticaJdbc         = "6.0.0"
+  val verticaJdbc         = "7.1.2"
   val dbUtils             = "1.5"
   val presto              = "0.181"
   val consulClient        = "1.2.1"

@@ -19,6 +19,7 @@ object ResolversPlugin extends AutoPlugin {
 
   override lazy val projectSettings = Seq(
     resolvers ++= Seq(
+      DefaultMavenRepository,
       Resolver.defaultLocal,
       Resolver.mavenLocal,
       scalaz,

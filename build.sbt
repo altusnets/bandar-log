@@ -34,7 +34,6 @@ lazy val `infra` = project.enablePlugins(CodeStylePlugin && ResolversPlugin).
             typesafeConfig,
             consulClient,
             presto,
-            verticaJdbc,
             dbUtils,
             scopt,
             sparkStreaming,

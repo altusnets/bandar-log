@@ -1,7 +1,7 @@
 import Dependencies._
 import sbt.Keys._
 
-version in ThisBuild := s"2.0.${sys.env.get("TRAVIS_BUILD_NUMBER")}"
+version in ThisBuild := s"2.0.${sys.env("TRAVIS_BUILD_NUMBER")}"
 scalaVersion in ThisBuild := "2.11.7"
 
 organization in ThisBuild := "com.aol.one.dwh"

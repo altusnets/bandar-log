@@ -17,5 +17,8 @@ before_install:
 script:
   - sbt clean scalastyle test compile
 
-after_success:
-  - ./script/deploy.sh
+deploy:
+  provider: script
+  script: bash script/deploy.sh
+  on:
+    branch: master

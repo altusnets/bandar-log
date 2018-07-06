@@ -12,7 +12,6 @@ object V {
   val spark               = "1.5.2"
   val config              = "1.3.0"
   val datadogMetrics      = "1.1.2"
-  val verticaJdbc         = "6.0.0"
   val dbUtils             = "1.5"
   val presto              = "0.181"
   val consulClient        = "1.2.1"
@@ -29,7 +28,6 @@ object V {
 object Dependencies {
   val typesafeConfig        = "com.typesafe"          % "config"                       % V.config
   val datadogMetrics        = "org.coursera"          % "metrics-datadog"              % V.datadogMetrics
-  val verticaJdbc           = "com.vertica"           % "jdbc-vertica"                 % V.verticaJdbc
   val dbUtils               = "commons-dbutils"       % "commons-dbutils"              % V.dbUtils
   val presto                = "com.facebook.presto"   % "presto-jdbc"                  % V.presto
   val consulClient          = "com.ecwid.consul"      % "consul-api"                   % V.consulClient

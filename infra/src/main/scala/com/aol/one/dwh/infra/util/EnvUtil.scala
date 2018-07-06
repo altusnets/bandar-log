@@ -8,13 +8,11 @@
 
 package com.aol.one.dwh.infra.util
 
-import scala.util.Try
-
 object EnvUtil {
 
   private val ENVIRONMENT_VARIABLE = "APP_ENVIRONMENT"
 
   def getEnvironment: Option[String] = {
-    Try(sys.env(ENVIRONMENT_VARIABLE)).toOption
+    sys.env.get(ENVIRONMENT_VARIABLE)
   }
 }

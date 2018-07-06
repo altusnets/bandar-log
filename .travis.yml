@@ -1,0 +1,24 @@
+language: scala
+
+scala:
+  - 2.11.7
+
+cache:
+  directories:
+  - $HOME/.m2
+  - $HOME/.ivy2
+
+services:
+  - docker
+
+before_install:
+  - chmod +x script/deploy.sh
+
+script:
+  - sbt clean scalastyle test compile
+
+deploy:
+  provider: script
+  script: bash script/deploy.sh
+  on:
+    branch: master

@@ -15,4 +15,4 @@ script:
   - sbt clean scalastyle test compile
 
 after_success:
-  - cd ../ && ./script/deploy.sh
+  - ./script/deploy.sh

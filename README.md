@@ -1,4 +1,5 @@
 # Bandar-Log: Monitoring Tool
+[![Build Status](https://travis-ci.org/OneByAol/bandar-log.svg?branch=master)](https://travis-ci.org/OneByAol/bandar-log)
 
 <p align="center"><img src="doc/images/monkey.png" width="350" height="350"/></p>
 

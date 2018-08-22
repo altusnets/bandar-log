@@ -122,6 +122,21 @@ object RichConfig {
       )
     }
 
+    def getGlueConfig(configId: String): GlueConfig = {
+      val glueConfig = underlying.getConfig(configId)
+
+      GlueConfig(
+        glueConfig.getString("region"),
+        glueConfig.getString("dbname"),
+        glueConfig.getString("access.key"),
+        glueConfig.getString("secret.key"),
+        glueConfig.getInt("fetch.size"),
+        glueConfig.getInt("segment.total.number"),
+        glueConfig.getInt("maxwait.timeout.seconds").seconds
+      )
+    }
+
+
     def getReporters: List[ReporterConfig] = {
       underlying.getOptionalObjectList("reporters").getOrElse(Nil).map { obj =>
         ReporterConfig(

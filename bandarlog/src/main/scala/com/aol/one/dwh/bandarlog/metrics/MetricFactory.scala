@@ -8,20 +8,12 @@
 
 package com.aol.one.dwh.bandarlog.metrics
 
-import com.aol.one.dwh.bandarlog.connectors.JdbcConnector
-import com.aol.one.dwh.infra.sql.MaxValuesQuery
-import com.aol.one.dwh.infra.sql.pool.ConnectionPoolHolder
-import BaseMetrics.{IN, LAG, OUT}
-import Metrics.REALTIME_LAG
-import com.aol.one.dwh.bandarlog.providers.{CurrentTimestampProvider, SqlLagProvider, SqlTimestampProvider}
+import com.aol.one.dwh.bandarlog.metrics.BaseMetrics.{IN, LAG, OUT}
+import com.aol.one.dwh.bandarlog.metrics.Metrics.REALTIME_LAG
+import com.aol.one.dwh.bandarlog.providers._
 import com.aol.one.dwh.infra.config.{ConnectorConfig, TableColumn, Tag}
 
-/**
-  * Sql Metric Factory
-  *
-  * Provides pair Metric -> Provider by metric id
-  */
-class SqlMetricFactory(connectionPoolHolder: ConnectionPoolHolder) {
+class MetricFactory(provider: ProviderFactory) {
 
   def create(
     metricId: String,
@@ -34,23 +26,15 @@ class SqlMetricFactory(connectionPoolHolder: ConnectionPoolHolder) {
 
     case IN =>
       val tags = List(Tag("in_table", inTable.table), Tag("in_connector", inConnector.tag))
-      val query = MaxValuesQuery.get(inConnector.connectorType)(inTable)
-      val connectionPool = connectionPoolHolder.get(inConnector)
-
       val inMetric = AtomicMetric[Long](metricPrefix, "in_timestamp", tags)
-      val inProvider = new SqlTimestampProvider(JdbcConnector(inConnector.connectorType, connectionPool), query)
-
+      val inProvider = provider.create(inConnector, inTable)
       Seq(MetricProvider(inMetric, inProvider))
 
     case OUT =>
       outConnectors.map { outConnector =>
         val tags = List(Tag("out_table", outTable.table), Tag("out_connector", outConnector.tag))
-        val query = MaxValuesQuery.get(outConnector.connectorType)(outTable)
-        val connectionPool = connectionPoolHolder.get(outConnector)
-
         val outMetric = AtomicMetric[Long](metricPrefix, "out_timestamp", tags)
-        val outProvider = new SqlTimestampProvider(JdbcConnector(outConnector.connectorType, connectionPool), query)
-
+        val outProvider = provider.create(outConnector, outTable)
         MetricProvider(outMetric, outProvider)
       }
 
@@ -62,7 +46,6 @@ class SqlMetricFactory(connectionPoolHolder: ConnectionPoolHolder) {
         val tags = inMetricProvider.metric.tags ++ outMetricProvider.metric.tags
         val lagMetric = AtomicMetric[Long](metricPrefix, "lag", tags)
         val lagProvider = new SqlLagProvider(inMetricProvider.provider, outMetricProvider.provider)
-
         MetricProvider(lagMetric, lagProvider)
       }
 
@@ -73,7 +56,6 @@ class SqlMetricFactory(connectionPoolHolder: ConnectionPoolHolder) {
         val realtimeLagMetric = AtomicMetric[Long](metricPrefix, "realtime_lag", outMetricProvider.metric.tags)
         val currentTimestampProvider = new CurrentTimestampProvider()
         val realtimeLagProvider = new SqlLagProvider(currentTimestampProvider, outMetricProvider.provider)
-
         MetricProvider(realtimeLagMetric, realtimeLagProvider)
       }
 

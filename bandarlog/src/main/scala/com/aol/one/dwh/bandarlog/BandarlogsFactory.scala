@@ -9,7 +9,8 @@
 package com.aol.one.dwh.bandarlog
 
 import com.aol.one.dwh.bandarlog.connectors.KafkaConnector
-import com.aol.one.dwh.bandarlog.metrics.{KafkaMetricFactory, Metric, SqlMetricFactory}
+import com.aol.one.dwh.bandarlog.metrics._
+import com.aol.one.dwh.bandarlog.providers.ProviderFactory
 import com.aol.one.dwh.bandarlog.reporters.{CustomTags, MetricReporter, RegistryFactory}
 import com.aol.one.dwh.bandarlog.scheduler.Scheduler
 import com.aol.one.dwh.infra.config.RichConfig._
@@ -55,7 +56,7 @@ class BandarlogsFactory(mainConfig: Config) extends LogTrait with ExceptionPrint
   private def createMetricProviders(bandarlogConf: Config, connectionPoolHolder: ConnectionPoolHolder) = {
     bandarlogConf.getBandarlogType match {
       case "kafka" => kafkaMetricProviders(bandarlogConf)
-      case "sql" => sqlMetricProviders(bandarlogConf, connectionPoolHolder)
+      case "sql" => metricProviders(bandarlogConf, connectionPoolHolder)
       case t => throw new IllegalArgumentException(s"Unsupported bandarlog type:[$t]")
     }
   }
@@ -71,13 +72,14 @@ class BandarlogsFactory(mainConfig: Config) extends LogTrait with ExceptionPrint
     }
   }
 
-  private def sqlMetricProviders(bandarlogConf: Config, connectionPoolHolder: ConnectionPoolHolder) = {
+  private def metricProviders(bandarlogConf: Config, connectionPoolHolder: ConnectionPoolHolder) = {
     val metricsPrefix = bandarlogConf.getReportConfig.prefix
-    val sqlMetricFactory = new SqlMetricFactory(connectionPoolHolder)
+    val providerFactory = new ProviderFactory(mainConfig, connectionPoolHolder)
+    val metricFactory = new MetricFactory(providerFactory)
 
     bandarlogConf.getTables.flatMap { case (inTable, outTable) =>
       bandarlogConf.getMetrics.flatMap { metricId =>
-        sqlMetricFactory.create(metricId, metricsPrefix, bandarlogConf.getInConnector, bandarlogConf.getOutConnectors, inTable, outTable)
+        metricFactory.create(metricId, metricsPrefix, bandarlogConf.getInConnector, bandarlogConf.getOutConnectors, inTable, outTable)
       }
     }
   }

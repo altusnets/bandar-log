@@ -23,6 +23,7 @@ object V {
   val slf4j               = "1.7.16"
   val scalatest           = "2.2.6"
   val mockito             = "1.10.19"
+  val awsGlue             = "1.11.388"
 }
 
 object Dependencies {
@@ -42,4 +43,5 @@ object Dependencies {
   val scalaz                = "org.scalaz"            %% "scalaz-core"                 % V.scalaz
   val scalaTest             = "org.scalatest"         %% "scalatest"                   % V.scalatest     % Test
   val mockito               = "org.mockito"           % "mockito-core"                 % V.mockito       % Test
+  val awsGlue               = "com.amazonaws"         % "aws-java-sdk-glue"            % V.awsGlue
 }

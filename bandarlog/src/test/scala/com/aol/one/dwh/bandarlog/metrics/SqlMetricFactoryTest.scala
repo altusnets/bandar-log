@@ -9,16 +9,16 @@
 package com.aol.one.dwh.bandarlog.metrics
 
 import com.aol.one.dwh.bandarlog.metrics.BaseMetrics._
-import com.aol.one.dwh.bandarlog.metrics.Metrics._
 import com.aol.one.dwh.bandarlog.metrics.SqlMetricFactoryTest._
-import com.aol.one.dwh.bandarlog.providers.{SqlLagProvider, SqlTimestampProvider}
-import com.aol.one.dwh.infra.config.{ConnectorConfig, TableColumn, Tag}
+import com.aol.one.dwh.bandarlog.metrics.Metrics.REALTIME_LAG
+import com.aol.one.dwh.bandarlog.providers.{ProviderFactory, SqlLagProvider, SqlTimestampProvider}
+import com.aol.one.dwh.infra.config._
 import com.aol.one.dwh.infra.sql.pool.{ConnectionPoolHolder, HikariConnectionPool}
-import org.mockito.Matchers.any
+import com.typesafe.config.Config
+import org.mockito.Matchers._
 import org.mockito.Mockito.when
 import org.scalatest.FunSuite
 import org.scalatest.mock.MockitoSugar
-
 
 object SqlMetricFactoryTest {
   private val metricPrefix = "sql_prefix"
@@ -27,16 +27,17 @@ object SqlMetricFactoryTest {
 }
 
 class SqlMetricFactoryTest extends FunSuite with MockitoSugar {
-
   private val connectorPoolHolder = mock[ConnectionPoolHolder]
   private val connectionPool = mock[HikariConnectionPool]
-  private val sqlMetricFactory = new SqlMetricFactory(connectorPoolHolder)
+  private val mainConfig = mock[Config]
+  private val providerFactory = new ProviderFactory(mainConfig, connectorPoolHolder)
+  private val metricFactory = new MetricFactory(providerFactory)
 
   test("create sql Metric & Provider for IN metric id") {
     mockConnectionPool()
     val inConnector = ConnectorConfig("vertica", "vertica_config_id", "test-vertica")
 
-    val results = sqlMetricFactory.create(IN, metricPrefix, inConnector, Seq.empty, inTable, outTable)
+    val results = metricFactory.create(IN, metricPrefix, inConnector, Seq.empty, inTable, outTable)
 
     assert(results.size == 1)
     assertMetric(results.head.metric, "in_timestamp", List(Tag("in_table", "in_test_table"), Tag("in_connector", "test-vertica")))
@@ -48,7 +49,7 @@ class SqlMetricFactoryTest extends FunSuite with MockitoSugar {
     val outConnector1 = ConnectorConfig("presto", "presto_config_id", "test-presto")
     val outConnector2 = ConnectorConfig("vertica", "vertica_config_id", "test-vertica")
 
-    val results = sqlMetricFactory.create(OUT, metricPrefix, None.orNull, Seq(outConnector1, outConnector2), inTable, outTable)
+    val results = metricFactory.create(OUT, metricPrefix, None.orNull, Seq(outConnector1, outConnector2), inTable, outTable)
 
     assert(results.size == 2)
 
@@ -67,7 +68,7 @@ class SqlMetricFactoryTest extends FunSuite with MockitoSugar {
     val outConnector1 = ConnectorConfig("presto", "presto_config_id_2", "out_test-presto")
     val outConnector2 = ConnectorConfig("vertica", "vertica_config_id", "test-vertica")
 
-    val results = sqlMetricFactory.create(LAG, metricPrefix, inConnector, Seq(outConnector1, outConnector2), inTable, outTable)
+    val results = metricFactory.create(LAG, metricPrefix, inConnector, Seq(outConnector1, outConnector2), inTable, outTable)
 
     assert(results.size == 2)
 
@@ -97,7 +98,7 @@ class SqlMetricFactoryTest extends FunSuite with MockitoSugar {
     val outConnector1 = ConnectorConfig("presto", "presto_config_id_2", "out_test-presto")
     val outConnector2 = ConnectorConfig("vertica", "vertica_config_id", "test-vertica")
 
-    val results = sqlMetricFactory.create(REALTIME_LAG, metricPrefix, None.orNull, Seq(outConnector1, outConnector2), inTable, outTable)
+    val results = metricFactory.create(REALTIME_LAG, metricPrefix, None.orNull, Seq(outConnector1, outConnector2), inTable, outTable)
 
     assert(results.size == 2)
 
@@ -114,7 +115,7 @@ class SqlMetricFactoryTest extends FunSuite with MockitoSugar {
 
   test("throw exception in unknown metric case") {
     intercept[IllegalArgumentException] {
-      sqlMetricFactory.create("UNKNOWN_METRIC", metricPrefix, None.orNull, Seq.empty, inTable, outTable)
+      metricFactory.create("UNKNOWN_METRIC", metricPrefix, None.orNull, Seq.empty, inTable, outTable)
     }
   }
 

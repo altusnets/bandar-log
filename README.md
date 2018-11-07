@@ -380,3 +380,5 @@ Bandar-Log is released under the Apache License, Version 2.0
  * Denis Pyshev (denys.pyshev@oath.com)
  * Alexey Kotlyar (alexey.kotlyar@oath.com)
  * Boris Trofimov (boris.trofimov@oath.com)
+ * Jorge Pedret for cute [Bandar-Log's face](doc/images/monkey.png) 
+ 

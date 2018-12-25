@@ -1,28 +1,37 @@
 import Dependencies._
 import sbt.Keys._
 
-version in ThisBuild := s"2.0.${sys.env("TRAVIS_BUILD_NUMBER")}"
-scalaVersion in ThisBuild := "2.11.7"
+lazy val buildNumber = sys.env.getOrElse("TRAVIS_BUILD_NUMBER", "SNAPSHOT")
 
-organization in ThisBuild := "com.aol.one.dwh"
-fork in ThisBuild := true
-crossPaths in ThisBuild := false
-updateOptions in ThisBuild := updateOptions.value.withCachedResolution(cachedResoluton = true)
+ThisBuild / scalaVersion := "2.11.12"
+ThisBuild / fork := true
+ThisBuild / crossPaths := false
+ThisBuild / updateOptions := updateOptions.value.withCachedResolution(cachedResoluton = true)
+
+ThisBuild / organization := "com.aol.one.dwh"
+ThisBuild / version := s"2.0.$buildNumber"
 
 // Projects
 val `bandar-log` = project.in(file("."))
-  .enablePlugins(UniversalDeployPlugin && CodeStylePlugin)
+  .enablePlugins(
+    UniversalDeployPlugin
+    && CodeStylePlugin
+  )
   .settings(
     topLevelDirectory := None,
-    publish := false
+    publish / skip := false
   )
   .aggregate(
     `infra`,
     `bandarlog`
   )
 
-lazy val `infra` = project.enablePlugins(CodeStylePlugin && ResolversPlugin).
-  settings(
+lazy val `infra` = project
+  .enablePlugins(
+    CodeStylePlugin
+    && ResolversPlugin
+  )
+  .settings(
       autoScalaLibrary := true,
       exportJars := true,
       libraryDependencies ++=
@@ -45,9 +54,14 @@ lazy val `infra` = project.enablePlugins(CodeStylePlugin && ResolversPlugin).
         )
   )
 
-lazy val `bandarlog` = project.enablePlugins(CodeStylePlugin && DockerSupportPlugin && ResolversPlugin).
-  dependsOn(`infra`).
-  settings(
+lazy val `bandarlog` = project
+  .enablePlugins(
+    CodeStylePlugin
+    && DockerSupportPlugin
+    && ResolversPlugin
+  )
+  .dependsOn(`infra`)
+  .settings(
       mainClass in Compile := Some("com.aol.one.dwh.bandarlog.EntryPoint"),
       exportJars := true,
       libraryDependencies ++=

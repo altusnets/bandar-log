@@ -32,26 +32,27 @@ lazy val `infra` = project
     && ResolversPlugin
   )
   .settings(
-      autoScalaLibrary := true,
-      exportJars := true,
-      libraryDependencies ++=
-        Seq(
-            slf4j,
-            log4j,
-            scalaTest,
-            mockito,
-            typesafeConfig,
-            consulClient,
-            presto,
-            dbUtils,
-            scopt,
-            sparkStreaming,
-            sparkStreamingKafka,
-            hikariPool,
-            scalaArm,
-            scalaz,
-            awsGlue
-        )
+    autoScalaLibrary := true,
+    exportJars := true,
+    libraryDependencies ++=
+      Seq(
+        slf4j,
+        log4j,
+        scalaTest,
+        mockito,
+        typesafeConfig,
+        consulClient,
+        presto,
+        dbUtils,
+        scopt,
+        hikariPool,
+        scalaArm,
+        scalaz,
+        awsGlue,
+        scalaCache,
+        kafka4scala,
+        kafkaClients
+      )
   )
 
 lazy val `bandarlog` = project
@@ -62,15 +63,15 @@ lazy val `bandarlog` = project
   )
   .dependsOn(`infra`)
   .settings(
-      mainClass in Compile := Some("com.aol.one.dwh.bandarlog.EntryPoint"),
-      exportJars := true,
-      libraryDependencies ++=
-        Seq(
-          scalaTest,
-          mockito,
-          datadogMetrics,
-          scalaCache
-        ),
+    mainClass in Compile := Some("com.aol.one.dwh.bandarlog.EntryPoint"),
+    exportJars := true,
+    libraryDependencies ++=
+      Seq(
+        scalaTest,
+        mockito,
+        datadogMetrics,
+        scalaCache
+      ),
 
     dockerBaseImage := "java",
     dockerEntrypoint := Seq("bin/start.sh")

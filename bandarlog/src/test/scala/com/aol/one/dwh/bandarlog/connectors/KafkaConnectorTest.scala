@@ -32,7 +32,7 @@ class KafkaConnectorTest extends FunSuite with MockitoSugar {
     val partitions: Either[Throwable, Set[TopicAndPartition]] = Right(headsValues.keySet)
     val heads: Either[Throwable, Map[TopicAndPartition, Long]] = Right(headsValues)
 
-    when(kafkaCluster.getLatestOffsets(topic.groupId)).thenReturn(heads)
+    when(kafkaCluster.getLatestOffsets(topic.groupId, topic.values)).thenReturn(heads)
 
     val resultHeads = kafkaConnector.getHeads(topic)
 
@@ -52,7 +52,7 @@ class KafkaConnectorTest extends FunSuite with MockitoSugar {
     )
     val heads: Either[Throwable, Map[TopicAndPartition, Long]] = Left(new Throwable)
 
-    when(kafkaCluster.getLatestOffsets(topic.groupId)).thenReturn(heads)
+    when(kafkaCluster.getLatestOffsets(topic.groupId, topic.values)).thenReturn(heads)
 
     val resultHeads = kafkaConnector.getHeads(topic)
 
@@ -67,7 +67,7 @@ class KafkaConnectorTest extends FunSuite with MockitoSugar {
     )
     val offsets: Either[Throwable, Map[TopicAndPartition, Long]] = Right(offsetValues)
 
-    when(kafkaCluster.getConsumerOffsets(topic.groupId)).thenReturn(offsets)
+    when(kafkaCluster.getConsumerOffsets(topic.groupId, topic.values)).thenReturn(offsets)
 
     val resultOffsets = kafkaConnector.getOffsets(topic)
 
@@ -83,7 +83,7 @@ class KafkaConnectorTest extends FunSuite with MockitoSugar {
     )
     val offsets: Either[Throwable, Map[TopicAndPartition, Long]] = Left(new Throwable)
 
-    when(kafkaCluster.getConsumerOffsets(topic.groupId)).thenReturn(offsets)
+    when(kafkaCluster.getConsumerOffsets(topic.groupId, topic.values)).thenReturn(offsets)
 
     val resultOffsets = kafkaConnector.getOffsets(topic)
 
@@ -105,8 +105,8 @@ class KafkaConnectorTest extends FunSuite with MockitoSugar {
     val heads: Either[Throwable, Map[TopicAndPartition, Long]] = Right(headsValues)
     val offsets: Either[Throwable, Map[TopicAndPartition, Long]] = Right(offsetValues)
 
-    when(kafkaCluster.getLatestOffsets(topic.groupId)).thenReturn(heads)
-    when(kafkaCluster.getConsumerOffsets(topic.groupId)).thenReturn(offsets)
+    when(kafkaCluster.getLatestOffsets(topic.groupId, topic.values)).thenReturn(heads)
+    when(kafkaCluster.getConsumerOffsets(topic.groupId, topic.values)).thenReturn(offsets)
 
     val resultState = kafkaConnector.getKafkaState(topic)
 

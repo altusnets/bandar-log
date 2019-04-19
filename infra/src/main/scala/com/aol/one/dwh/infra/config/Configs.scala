@@ -23,8 +23,8 @@ import scala.concurrent.duration._
 case class KafkaConfig(
   zookeeperQuorum: String,
   brokers: Option[String],
-  kafkaResponseTimeout: Duration = 1 second,
-  cacheResultsTime: Duration = 1 minute
+  kafkaResponseTimeout: Option[Duration],
+  cacheResultsTime: Option[Duration]
 )
 
 /**

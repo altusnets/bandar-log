@@ -115,6 +115,9 @@ abstract class KafkaCluster extends AutoCloseable {
 
 object KafkaCluster {
 
+  private val defaultKafkaResponseTimeout = 1 second
+  private val defaultCachingTime = 10 seconds
+
   def apply(config: KafkaConfig): KafkaCluster = {
     val brokers: String = {
 
@@ -129,8 +132,8 @@ object KafkaCluster {
     new KafkaCluster {
       override val adminClient: AdminClient = createAdminClient(brokers)
       override val consumer: KafkaConsumer[String, String] = createConsumer(brokers)
-      override val kafkaAwaitingTimeout: Duration = config.kafkaResponseTimeout
-      override val cacheInvalidationTimeout: Duration = config.cacheResultsTime
+      override val kafkaAwaitingTimeout: Duration = config.kafkaResponseTimeout.getOrElse(defaultKafkaResponseTimeout)
+      override val cacheInvalidationTimeout: Duration = config.cacheResultsTime.getOrElse(defaultCachingTime)
     }
   }
 

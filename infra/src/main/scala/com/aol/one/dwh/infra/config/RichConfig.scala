@@ -125,7 +125,9 @@ object RichConfig {
 
       KafkaConfig(
         kafkaConfig.getString("zk-quorum"),
-        kafkaConfig.getOptionalString("brokers")
+        kafkaConfig.getOptionalString("brokers"),
+        kafkaConfig.getOptionalDuration("response-timeout"),
+        kafkaConfig.getOptionalDuration("caching-time")
       )
     }
 

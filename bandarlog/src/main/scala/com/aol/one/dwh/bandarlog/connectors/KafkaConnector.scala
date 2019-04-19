@@ -36,7 +36,7 @@ class KafkaConnector(kafkaCluster: KafkaCluster) extends LogTrait {
     } yield (heads, offsets)
 
   def getHeads(topic: Topic): Option[KafkaHeads] = {
-    kafkaCluster.getLatestOffsets(topic.groupId) match {
+    kafkaCluster.getLatestOffsets(topic.groupId, topic.values) match {
       case Left(l) =>
         logger.error(s"Cannot obtain leaders offsets for topic:[${topic.values}], cause {}", l.toString)
         None
@@ -45,7 +45,7 @@ class KafkaConnector(kafkaCluster: KafkaCluster) extends LogTrait {
   }
 
   def getOffsets(topic: Topic): Option[KafkaOffsets] = {
-    kafkaCluster.getConsumerOffsets(topic.groupId) match {
+    kafkaCluster.getConsumerOffsets(topic.groupId, topic.values ) match {
       case Left(l) =>
         logger.error(s"Cannot obtain consumers offsets for topic:[${topic.values}], cause {}", l.toString)
         None

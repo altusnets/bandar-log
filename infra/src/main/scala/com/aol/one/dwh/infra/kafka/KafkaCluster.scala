@@ -59,13 +59,17 @@ abstract class KafkaCluster extends AutoCloseable {
   /**
     * Get offsets for particular consumer group
     * @param groupId  - consumer group id
+    * @param topics   - topic names
     * @return
     */
-  def getConsumerOffsets(groupId: String): Either[Throwable, Map[TopicAndPartition, Offset]] = memoizeSync {
+  def getConsumerOffsets(groupId: String, topics: Set[String]): Either[Throwable, Map[TopicAndPartition, Offset]] = memoizeSync {
     val metadata = Try(Await.result(getKafkaMetadata(groupId), kafkaAwaitingTimeout))
     Either.cond(
       metadata.isSuccess,
-      metadata.get.map { case (tp, offsetAndMetadata) => (new TopicAndPartition(tp), offsetAndMetadata.offset()) },
+      metadata
+        .get
+        .filter { case (tp, _) => topics.contains(tp.topic()) }
+        .map { case (tp, offsetAndMetadata) => (new TopicAndPartition(tp), offsetAndMetadata.offset()) },
       metadata.failed.get
     )
   }
@@ -75,9 +79,10 @@ abstract class KafkaCluster extends AutoCloseable {
     * Consumer API method guarantees it does not change the current consumer position of the partitions.
     * See [[org.apache.kafka.clients.consumer.KafkaConsumer#endOffsets(java.util.Collection)]]
     * @param groupId  - consumer group id
+    * @param topics   - topic names
     * @return
     */
-  def getLatestOffsets(groupId: String): Either[Throwable, Map[TopicAndPartition, Offset]] = {
+  def getLatestOffsets(groupId: String, topics: Set[String]): Either[Throwable, Map[TopicAndPartition, Offset]] = {
     val metadata = Try(Await.result(getKafkaMetadata(groupId), kafkaAwaitingTimeout))
     Either.cond(
       metadata.isSuccess,
@@ -86,7 +91,9 @@ abstract class KafkaCluster extends AutoCloseable {
           metadata
             .get
             .keySet
-            .map {tp => new TopicPartition(tp.topic, tp.partition)}.asJavaCollection
+            .filter { tp => topics.contains(tp.topic()) }
+            .map {tp => new TopicPartition(tp.topic, tp.partition)}
+            .asJavaCollection
         val offsets: Map[TopicAndPartition, Long] =
           consumer
             .endOffsets(topicAndPartitions)

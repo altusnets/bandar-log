@@ -118,7 +118,6 @@ object KafkaCluster {
   def apply(config: KafkaConfig): KafkaCluster = {
     val brokers: String = {
 
-      // NB: what about isSecure?
       val zkClient = KafkaZkClient(config.zookeeperQuorum, isSecure = false, Integer.MAX_VALUE, Integer.MAX_VALUE, 10, new SystemTime())
       val endpoints = zkClient.getAllBrokersInCluster.flatMap(_.endPoints)
       val brokersFromZK = endpoints.map{ endpoint => s"${endpoint.host}:${endpoint.port}"}.mkString(",")

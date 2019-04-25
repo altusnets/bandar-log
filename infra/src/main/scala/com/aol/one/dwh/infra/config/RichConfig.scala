@@ -64,6 +64,13 @@ object RichConfig {
       } else {
         None
       }
+
+    def getOptionalDuration(path: String): Option[Duration] =
+      if (underlying.hasPath(path) && !underlying.getIsNull(path)) {
+        Some(Duration.fromNanos(underlying.getDuration(path).toNanos))
+      } else {
+        None
+      }
   }
 
   implicit class RichConfig(val underlying: Config) extends AnyRef {
@@ -118,7 +125,9 @@ object RichConfig {
 
       KafkaConfig(
         kafkaConfig.getString("zk-quorum"),
-        kafkaConfig.getOptionalString("brokers")
+        kafkaConfig.getOptionalString("brokers"),
+        kafkaConfig.getOptionalDuration("response-timeout"),
+        kafkaConfig.getOptionalDuration("caching-time")
       )
     }
 

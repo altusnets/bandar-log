@@ -9,7 +9,6 @@
 import sbt._
 
 object V {
-  val spark               = "1.5.2"
   val config              = "1.3.0"
   val datadogMetrics      = "1.1.2"
   val dbUtils             = "1.5"
@@ -24,6 +23,7 @@ object V {
   val scalatest           = "2.2.6"
   val mockito             = "1.10.19"
   val awsGlue             = "1.11.388"
+  val kafka               = "2.2.0"
 }
 
 object Dependencies {
@@ -37,11 +37,11 @@ object Dependencies {
   val log4j                 = "org.slf4j"             % "slf4j-log4j12"                % V.slf4j
   val scalaCache            = "com.github.cb372"      %% "scalacache-guava"            % V.scalaCache
   val scopt                 = "com.github.scopt"      %% "scopt"                       % V.scopt
-  val sparkStreaming        = "org.apache.spark"      %% "spark-streaming"             % V.spark
-  val sparkStreamingKafka   = "org.apache.spark"      %% "spark-streaming-kafka"       % V.spark
   val scalaArm              = "com.jsuereth"          %% "scala-arm"                   % V.scalaArm
   val scalaz                = "org.scalaz"            %% "scalaz-core"                 % V.scalaz
   val scalaTest             = "org.scalatest"         %% "scalatest"                   % V.scalatest     % Test
   val mockito               = "org.mockito"           % "mockito-core"                 % V.mockito       % Test
   val awsGlue               = "com.amazonaws"         % "aws-java-sdk-glue"            % V.awsGlue
+  val kafka4scala           = "org.apache.kafka"      %% "kafka"                       % V.kafka
+  val kafkaClients          = "org.apache.kafka"      %  "kafka-clients"               % V.kafka
 }

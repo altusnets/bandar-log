@@ -62,7 +62,7 @@ abstract class KafkaCluster extends AutoCloseable {
     * @param topics   - topic names
     * @return
     */
-  def getConsumerOffsets(groupId: String, topics: Set[String]): Either[Throwable, Map[TopicAndPartition, Offset]] = memoizeSync {
+  def getConsumerOffsets(groupId: String, topics: Set[String]): Either[Throwable, Map[TopicAndPartition, Offset]] = {
     val metadata = Try(Await.result(getKafkaMetadata(groupId), kafkaAwaitingTimeout))
     Either.cond(
       metadata.isSuccess,

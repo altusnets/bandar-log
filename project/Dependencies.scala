@@ -9,18 +9,18 @@
 import sbt._
 
 object V {
-  val config              = "1.3.0"
+  val config              = "1.3.4"
   val datadogMetrics      = "1.1.2"
   val dbUtils             = "1.5"
   val presto              = "0.181"
   val consulClient        = "1.2.1"
   val scalaCache          = "0.9.4"
-  val scopt               = "3.3.0"
-  val hikariPool          = "2.7.8"
+  val scopt               = "3.7.1"
+  val hikariPool          = "3.3.1"
   val scalaArm            = "2.0"
   val scalaz              = "7.2.9"
   val slf4j               = "1.7.16"
-  val scalatest           = "2.2.6"
+  val scalatest           = "3.0.7"
   val mockito             = "1.10.19"
   val awsGlue             = "1.11.388"
   val kafka               = "2.2.0"

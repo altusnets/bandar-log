@@ -377,6 +377,10 @@ Reporter API for the specific monitoring service like Datadog. <br/>
 6. **Monitor** <br/>
 Metrics monitor in monitoring service.
 
+## Docker image
+
+Published as [bandarlog](https://hub.docker.com/r/onebyaol/bandarlog/)
+
 ## Build custom image
 
 _publish bandarlog image to the local machine:_

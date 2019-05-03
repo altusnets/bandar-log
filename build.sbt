@@ -47,11 +47,11 @@ lazy val `infra` = project
         scopt,
         hikariPool,
         scalaArm,
-        scalaz,
         awsGlue,
         scalaCache,
         kafka4scala,
-        kafkaClients
+        kafkaClients,
+        parserCombinators
       )
   )
 

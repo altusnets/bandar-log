@@ -377,6 +377,10 @@ Reporter API for the specific monitoring service like Datadog. <br/>
 6. **Monitor** <br/>
 Metrics monitor in monitoring service.
 
+## Docker image
+
+Published as [bandarlog](https://hub.docker.com/r/onebyaol/bandarlog/)
+
 ## Build custom image
 
 _publish bandarlog image to the local machine:_
@@ -394,9 +398,10 @@ docker push <image>
 Bandar-Log is released under the Apache License, Version 2.0
 
 ## Credits
- * Alexey Lipodat (alexey.lipodat@oath.com)
- * Denis Pyshev (denys.pyshev@oath.com)
- * Alexey Kotlyar (alexey.kotlyar@oath.com)
- * Boris Trofimov (boris.trofimov@oath.com)
+ * [Alexey Lipodat](mailto:a.lipodat@gmail.com)
+ * [Denis Pyshev](mailto:denys.pyshev@verizonmedia.com )
+ * [Alexey Kotlyar](mailto:kotlyar.alexey@verizonmedia.com)
+ * [Boris Trofimov](mailto:trofimov.boris@verizonmedia.com)
+ * [Maria Rabyk](mailto:mariia.rabyk@sigma.software)
  * Jorge Pedret for cute [Bandar-Log's face](doc/images/monkey.png) 
  

@@ -210,7 +210,7 @@ object RichConfig {
     def getTables: Seq[(Table, Table)] = {
       underlying.getObjectList("tables").map { obj =>
 
-      val columnType = underlying.getOptionalString("column-type").getOrElse("")
+      val columnType = obj.toConfig.getOptionalString("column-type").getOrElse("")
 
       columnType match {
         case "" =>

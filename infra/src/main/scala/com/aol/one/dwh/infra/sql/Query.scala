@@ -12,7 +12,6 @@ import com.aol.one.dwh.infra.config.Table
 import com.aol.one.dwh.infra.sql.pool.SqlSource._
 
 object ColumnType {
-  val DEFAULT = "default"
   val TIMESTAMP = "timestamp"
   val DATETIME = "datetime"
 }

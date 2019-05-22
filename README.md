@@ -197,23 +197,30 @@ scheduler {
 
 _SQL tables:_
 ```
-tables = [  
-  {                                                        # config for table when column-type = datetime
-    in-table = "in_table"                                  # table name for for the IN metric
+tables = [                                                 # example of config for table when column-type = datetime 
+  {
+    in-table = "in_table_1"                                # table name for for the IN metric
     in-columns = ["year=yyyy", "month=MM", "day=dd"]       # <column>=<format> pairs for the IN metric
-    out-table = "out_table"                                # table name for for the OUT metric
+    out-table = "out_table_1"                              # table name for for the OUT metric
     out-columns = ["year=yyyy", "month=MM", "day=dd"]      # <column>=<format> pairs for the OUT metric
   },
-  {                                                        # config for table when column-type = timestamp
-    in-table = "in_table"                                  # table name for for the IN metric
-    in-columns = ["in_column"]                             # column name for the IN metric
-    out-table = "out_table"                                # table name for for the OUT metric
-    out-columns = ["out_column"]                           # column name for the OUT metric
-  },                                    
-  {                                                        # config for table when column-type = default
-    in-table = "in_table:in_column"                        # <table>:<column> pair for the IN metric
-    out-table = "out_table:out_column"                     # <table>:<column> pair for the OUT metric
-  },
+  { 
+    in-table = "in_table_n"
+    in-columns = ["date=YYYY-MM-DD-HH"] 
+    out-table = "out_table_n"
+    out-columns = ["date=YYYY-MM-DD-HH"]
+  }, 
+  ...
+]
+```
+```
+tables = [                                                 # example of config for table when column-type = timestamp
+  {
+    in-table = "in_table_1"                                # table name for for the IN metric
+    in-columns = ["in_column_1"]                           # column name for the IN metric
+    out-table = "out_table_1"                              # table name for for the OUT metric
+    out-columns = ["out_column_1"]                         # column name for the OUT metric
+  }, 
   ...
 ]
 ```
@@ -258,8 +265,8 @@ The following metrics are available for `bandarlog` with type `kafka` :
 > 
 > Bandar-Log assumes:
 > 1. ETL components use dedicated column(s) to mark and isolate specific piece of processed data. 
-> 2. Column can be of several types according to data type of partition column: `default` or `timestamp` or `datetime`. 
-> 2. The semantics of `default`/`timestamp` column (here and futher called  `batch_id` [name is configurable]) is Unixtime timestamp measured in milliseconds (_UTC_ by definition) which determines a moment of time when piece of data has been processed. `default` is used for compatibility with previous version of BandafLog and will be deprecated
+> 2. Column can be of several types according to data type of partition column: `timestamp` or `datetime`. 
+> 2. The semantics of `timestamp` column (here and futher called  `batch_id` [name is configurable]) is Unixtime timestamp measured in milliseconds (_UTC_ by definition) which determines a moment of time when piece of data has been processed.
 > 3. This column must be fetched using query `SELECT MAX(batch_id) FROM :table`.
 > 4. The semantics of `datetime` is Date/Timestamp (e.g., '2013-01-01' or '2015-04-09 14:07'). There can be several columns of type `datetime`. Along with the column name the appropriate format must be provided via config for parsing the partition values to date represented by milliseconds. The format is according to [Date and Time Patterns](https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html) in Java SimpleDateFormat.
 > 5. These columns must be fetched using query `SELECT DISTINCT year, month, day FROM :table`

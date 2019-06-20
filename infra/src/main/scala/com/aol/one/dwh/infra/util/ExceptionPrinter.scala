@@ -17,6 +17,7 @@ trait ExceptionPrinter {
       val sw = new StringWriter()
       val pw = new PrintWriter(sw)
       e.printStackTrace(pw)
+      pw.close()
       sw.toString
     }
   }

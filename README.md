@@ -406,9 +406,9 @@ Bandar-Log is released under the Apache License, Version 2.0
 
 ## Credits
  * [Alexey Lipodat](mailto:a.lipodat@gmail.com)
- * [Denis Pyshev](mailto:denys.pyshev@verizonmedia.com )
- * [Alexey Kotlyar](mailto:kotlyar.alexey@verizonmedia.com)
- * [Boris Trofimov](mailto:trofimov.boris@verizonmedia.com)
+ * [Denis Pyshev](mailto:denis.pyshev@sigma.software)
+ * [Alexey Kotlyar](mailto:alex.v.kotliar@gmail.com)
+ * [Boris Trofimov](mailto:boris.trofimov@sigma.software)
  * [Maria Rabyk](mailto:mariia.rabyk@sigma.software)
- * Jorge Pedret for cute [Bandar-Log's face](doc/images/monkey.png) 
+ * [Jorge Pedret](https://dribbble.com/jorgepedret) for cute [Bandar-Log's face](doc/images/monkey.png) 
  

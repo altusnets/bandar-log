@@ -16,15 +16,13 @@ trait ExceptionPrinter {
 
   implicit class ExceptionOpts(e: Throwable) {
     def getStringStackTrace: String = {
-      var stringWriter: Option[StringWriter] = None
+
+      val sw = new StringWriter()
+
       for {
-        sw <- managed(new StringWriter())
         pw <- managed(new PrintWriter(sw))
-      } {
-        stringWriter = Some(sw)
-        e.printStackTrace(pw)
-      }
-      stringWriter.get.toString
+      } e.printStackTrace(pw)
+      sw.toString
     }
   }
 

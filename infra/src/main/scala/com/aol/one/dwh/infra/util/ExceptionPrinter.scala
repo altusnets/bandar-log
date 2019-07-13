@@ -16,13 +16,9 @@ trait ExceptionPrinter {
 
   implicit class ExceptionOpts(e: Throwable) {
     def getStringStackTrace: String = {
-
       val sw = new StringWriter()
-
-      for {
-        pw <- managed(new PrintWriter(sw))
-      } e.printStackTrace(pw)
-      sw.toString
+      managed(new PrintWriter(sw)) apply e.printStackTrace
+      sw.toString()
     }
   }
 

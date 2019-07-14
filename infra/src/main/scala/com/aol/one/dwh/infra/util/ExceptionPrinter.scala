@@ -10,14 +10,16 @@ package com.aol.one.dwh.infra.util
 
 import java.io.{PrintWriter, StringWriter}
 
+import resource._
+
 trait ExceptionPrinter {
 
   implicit class ExceptionOpts(e: Throwable) {
     def getStringStackTrace: String = {
       val sw = new StringWriter()
-      val pw = new PrintWriter(sw)
-      e.printStackTrace(pw)
-      sw.toString
+      managed(new PrintWriter(sw)) apply e.printStackTrace
+      sw.toString()
     }
   }
+
 }

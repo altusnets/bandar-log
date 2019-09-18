@@ -5,13 +5,11 @@ import java.util.Properties
 import com.aol.one.dwh.infra.config.KafkaConfig
 import com.google.common.cache.CacheBuilder
 import kafka.common.TopicAndPartition
-import kafka.zk.KafkaZkClient
 import org.apache.kafka.clients.admin.AdminClient
 import org.apache.kafka.clients.consumer.{ConsumerConfig, KafkaConsumer, OffsetAndMetadata}
 import org.apache.kafka.clients.{CommonClientConfigs, admin}
 import org.apache.kafka.common.TopicPartition
 import org.apache.kafka.common.serialization.StringDeserializer
-import org.apache.kafka.common.utils.SystemTime
 import scalacache.ScalaCache
 import scalacache.guava.GuavaCache
 import scalacache.memoization._
@@ -40,7 +38,8 @@ abstract class KafkaCluster extends AutoCloseable {
 
   /**
     * Get and cache partition and offset metadata for particular consumer group
-    * @param groupId  - consumer group id
+    *
+    * @param groupId - consumer group id
     * @return
     */
   private def getKafkaMetadata(groupId: String): Future[Map[TopicPartition, OffsetAndMetadata]] = {
@@ -58,8 +57,9 @@ abstract class KafkaCluster extends AutoCloseable {
 
   /**
     * Get offsets for particular consumer group
-    * @param groupId  - consumer group id
-    * @param topics   - topic names
+    *
+    * @param groupId - consumer group id
+    * @param topics  - topic names
     * @return
     */
   def getConsumerOffsets(groupId: String, topics: Set[String]): Either[Throwable, Map[TopicAndPartition, Offset]] = {
@@ -78,8 +78,9 @@ abstract class KafkaCluster extends AutoCloseable {
     * Get latest records offsets for particular consumer group.
     * Consumer API method guarantees it does not change the current consumer position of the partitions.
     * See [[org.apache.kafka.clients.consumer.KafkaConsumer#endOffsets(java.util.Collection)]]
-    * @param groupId  - consumer group id
-    * @param topics   - topic names
+    *
+    * @param groupId - consumer group id
+    * @param topics  - topic names
     * @return
     */
   def getLatestOffsets(groupId: String, topics: Set[String]): Either[Throwable, Map[TopicAndPartition, Offset]] = {
@@ -92,7 +93,7 @@ abstract class KafkaCluster extends AutoCloseable {
             .get
             .keySet
             .filter { tp => topics.contains(tp.topic()) }
-            .map {tp => new TopicPartition(tp.topic, tp.partition)}
+            .map { tp => new TopicPartition(tp.topic, tp.partition) }
             .asJavaCollection
         val offsets: Map[TopicAndPartition, Long] =
           consumer
@@ -119,19 +120,9 @@ object KafkaCluster {
   private val defaultCachingTime = 10 seconds
 
   def apply(config: KafkaConfig): KafkaCluster = {
-    val brokers: String = {
-
-      val zkClient = KafkaZkClient(config.zookeeperQuorum, isSecure = false, Integer.MAX_VALUE, Integer.MAX_VALUE, 10, new SystemTime())
-      val endpoints = zkClient.getAllBrokersInCluster.flatMap(_.endPoints)
-      val brokersFromZK = endpoints.map{ endpoint => s"${endpoint.host}:${endpoint.port}"}.mkString(",")
-      zkClient.close()
-
-      config.brokers.getOrElse(brokersFromZK)
-    }
-
     new KafkaCluster {
-      override val adminClient: AdminClient = createAdminClient(brokers)
-      override val consumer: KafkaConsumer[String, String] = createConsumer(brokers)
+      override val adminClient: AdminClient = createAdminClient(config.brokers)
+      override val consumer: KafkaConsumer[String, String] = createConsumer(config.brokers)
       override val kafkaAwaitingTimeout: Duration = config.kafkaResponseTimeout.getOrElse(defaultKafkaResponseTimeout)
       override val cacheInvalidationTimeout: Duration = config.cacheResultsTime.getOrElse(defaultCachingTime)
     }
